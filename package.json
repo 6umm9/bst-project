@@ -1,0 +1,17 @@
+{
+    "name": "bst-project",
+    "version": "1.0.0",
+    "description": "Balanced Binary Search Tree implementation",
+    "main": "index.js",
+    "type": "module",
+    "scripts": {
+        "start": "node index.js"
+    },
+    "keywords": [
+        "bst",
+        "binary-search-tree",
+        "data-structures"
+    ],
+    "author": "",
+    "license": "ISC"
+}
