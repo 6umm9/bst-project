@@ -264,6 +264,95 @@ class Tree {
         return node;
     }
 
+    // Get the height of a node (number of edges to furthest leaf)
+    height(value) {
+        const node = this.find(value);
+
+        if (node === null) {
+            return null;
+        }
+
+        return this.#getHeight(node);
+    }
+
+    #getHeight(node) {
+        if (node === null) {
+            return -1; // Height of null node is -1 (so leaf has height 0)
+        }
+
+        const leftHeight = this.#getHeight(node.left);
+        const rightHeight = this.#getHeight(node.right);
+
+        // Height is 1 + max height of children
+        return 1 + Math.max(leftHeight, rightHeight);
+    }
+
+    // Get the depth of a node (number of edges from root)
+    depth(value) {
+        return this.#getDepth(this.root, value, 0);
+    }
+
+    #getDepth(node, value, currentDepth) {
+        if (node === null) {
+            return null; // Value not found
+        }
+
+        if (node.data === value) {
+            return currentDepth;
+        }
+
+        // Search in left or right subtree
+        if (value < node.data) {
+            return this.#getDepth(node.left, value, currentDepth + 1);
+        } else {
+            return this.#getDepth(node.right, value, currentDepth + 1);
+        }
+    }
+
+    // Check if the tree is balanced
+    isBalanced() {
+        return this.#checkBalance(this.root) !== -1;
+    }
+
+    #checkBalance(node) {
+        if (node === null) {
+            return 0; // Height of empty tree is 0
+        }
+
+        // Check left subtree
+        const leftHeight = this.#checkBalance(node.left);
+        if (leftHeight === -1) {
+            return -1; // Left subtree is unbalanced
+        }
+
+        // Check right subtree
+        const rightHeight = this.#checkBalance(node.right);
+        if (rightHeight === -1) {
+            return -1; // Right subtree is unbalanced
+        }
+
+        // Check if current node is balanced
+        if (Math.abs(leftHeight - rightHeight) > 1) {
+            return -1; // Current node is unbalanced
+        }
+
+        // Return height of current node
+        return 1 + Math.max(leftHeight, rightHeight);
+    }
+
+    // Rebalance the tree
+    rebalance() {
+        // Get all values in sorted order using in-order traversal
+        const values = [];
+        this.inOrderForEach((node) => {
+            values.push(node.data);
+        });
+
+        // Rebuild the tree with sorted values
+        this.root = this.buildTree(values);
+    }
+
+
     // Helper method to visualize the tree (optional but useful for testing)
     prettyPrint(node = this.root, prefix = '', isLeft = true) {
         if (node === null) {
